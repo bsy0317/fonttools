@@ -950,6 +950,7 @@ class Options(object):
 
 		self.verbose = False
 		self.timing = False
+		self.drop_tables = []
 
 		self.set(**kwargs)
 
@@ -1161,6 +1162,9 @@ class Merger(object):
 			allTags = ['cmap'] + list(allTags)
 
 		for tag in allTags:
+			if tag in self.options.drop_tables:
+				continue
+
 			with timer("merge '%s'" % tag):
 				tables = [font.get(tag, NotImplemented) for font in fonts]
 
