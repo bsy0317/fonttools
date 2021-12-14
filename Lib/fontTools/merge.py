@@ -424,9 +424,15 @@ def _glyphsAreSame(glyphSet1, glyphSet2, glyph1, glyph2):
 	g2 = glyphSet2[glyph2]
 	g1.draw(pen1)
 	g2.draw(pen2)
-	return (pen1.value == pen2.value and
-		g1.width == g2.width and
-		(not hasattr(g1, 'height') or g1.height == g2.height))
+	if pen1.value != pen2.value:
+		return False
+	tolerance = .05 if pen1.value else .20
+	if (g1.width - g2.width) > g1.width * tolerance:
+		return False
+	if hasattr(g1, 'height') and g1.height is not None:
+		if ((g1.height - g2.height) > g1.height * tolerance):
+			return False
+	return True
 
 # Valid (format, platformID, platEncID) triplets for cmap subtables containing
 # Unicode BMP-only and Unicode Full Repertoire semantics.
